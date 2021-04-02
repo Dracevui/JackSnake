@@ -1,4 +1,5 @@
 import pygame
+import sys
 import random
 
 pygame.init()
@@ -26,6 +27,8 @@ score_font = pygame.font.SysFont("comicsansms", 35)
 
 TIME_SHIFT = pygame.USEREVENT
 
+instruction_surface = pygame.transform.scale((pygame.image.load("Onscreen_Instructions.png")), (600, 400))
+
 
 def multiples(num1, num2, mult):
     listz = [*range(num1, num2)]
@@ -48,8 +51,23 @@ def message(msg, color):
     dis.blit(msg, [dis_width / 6, dis_height / 3])
 
 
+def instruction_screen():  # Displays Instruction Screen when game launches
+    instruction_state = False
+    while not instruction_state:
+        dis.fill(white)
+        for i in pygame.event.get():
+            if i.type == pygame.KEYDOWN:
+                instruction_state = True
+            if i.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        dis.blit(instruction_surface, (0, 0))
+        pygame.display.update()
+
+
 def game_loop():
     global snake_speed
+
     game_over = False
     game_close = False
 
@@ -126,12 +144,14 @@ def game_loop():
             foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
             length_of_snake += 1
 
-        pygame.time.set_timer(TIME_SHIFT, 5000)
+        pygame.time.set_timer(TIME_SHIFT, 30000)
 
         clock.tick(snake_speed)
 
     pygame.quit()
     quit()
 
+
+instruction_screen()
 
 game_loop()
